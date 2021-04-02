@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Courses</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
+  
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
+  <style>
+ 
+  .card{
+    background-color: rgb(235, 66, 94);
+  }
+
+  a h5{
+    color: white;
+  }
+
+  .badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+  </style>
+</head>
+<body>
+<div class="row">
+      <div class="col-sm">
+        <nav class="navbar navbar-default" style="background-color: pink;">
+          <div class="container-fluid">
+            <div class="navbar-header">
+              <a class="navbar-brand weight-300" href="/Courses/courses.html">
+                <img src="https://cms.cb.amrita.edu/images/amrita_wide_short_new.png" style="margin-top: -40px; margin-left: 40px;">
+            </a>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="#"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
+                <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+              </svg> Edit My Profile</a></li>
+              <li><a href="/logout"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z"/>
+                <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>
+              </svg> Log Out</a></li>
+			      </ul>
+          </div>
+        </nav>
+      </div>
+    </div>
+
+<div style="background:rgb(234,235,185) !important " class="jumbotron text-center">
+  <h1>Welcome to Digital Course File</h1>
+  <p>Please select the desired Course</p> 
+</div>
+
+  
+<div class="container">
+  <div class="row row-cols-3">
+  <% user.courseList.forEach(function(course) {%>
+  <div class="col">
+	<div class="card mt-5" style="width: 18rem; height: 10rm;">
+      <div class="card-body m-auto">
+          <a class="nav-link" href="/courses/dashboard/<%=course._id%>" class="card-title" style="padding-top: 50%; padding-bottom: 50%;">
+            <span class="badge bg-secondary">5</span></h4>
+            <h5 class="card-title p-auto"><%=course.code%></h5>
+          </a>
+      </div>
+  </div>
+  </div>
+  <% }); %>
+  </div>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Dashboard</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+<style>
+body {
+  background-image: url('/Courses/images/bgphoto.jpg');
+}
+</style>
+<div class="row">
+      <div class="col-sm">
+        <nav class="navbar navbar-default" style="background-color: pink;">
+          <div class="container-fluid">
+            <div class="navbar-header">
+              <a class="navbar-brand weight-300" href="/Courses/dashboard.html">
+                <img src="https://cms.cb.amrita.edu/images/amrita_wide_short_new.png" style="margin-top: -40px; margin-left: 40px;">
+            </a>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+				<li><a href="/Courses/courses.html"><span class="glyphicon glyphicon-log-in"></span> Back to Courses</a></li>
+			</ul>
+          </div>
+        </nav>
+      </div>
+    </div>
+
+<div style="background:rgb(234,235,185) !important " class="jumbotron text-center">
+  <h3>Welcome to the Dashboard</h3>
+  <p>Please select the desired Section</p> 
+  <p><%= course.code %></p>
+</div>
+
+  
+<div class="container">
+    <div class="col-sm-4">
+      <a href="/Courses/images/#" class="thumbnail">
+		  <h4>Files Section       <span class="badge">5</span></h4>
+		  <img src="/Courses/images/files.png"/>
+	  </a>
+    </div>
+    <div class="col-sm-4">
+      <a href="/Courses/images/#" class="thumbnail">
+		  <h4>Marks Sectioon     <span class="badge">5</span></h4>
+		  <img src="/Courses/images/marks.png"/>
+	  </a>
+    </div>
+	<div class="col-sm-4">
+      <a href="/Courses/images/#" class="thumbnail">
+		  <h4>Assignment Section      <span class="badge">5</span></h4>
+		  <img src="/Courses/images/assignment1.png"/>
+	  </a>
+    </div>
+</div>
+
+</body>
+</html>

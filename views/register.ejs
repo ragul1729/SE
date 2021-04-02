@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Signup</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="
+	sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+	<style>
+
+body 
+{
+	padding-top: 7%;
+	background: #800080;  /* fallback for old browsers */
+background: -webkit-linear-gradient(to right, #ffc0cb, #800080);  /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to right, #ffc0cb, #800080); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+	font-family: 'Roboto', sans-serif;
+	/*background: url("../public/login_bg.jpg") no-repeat center center fixed;
+	height: 100%;
+	position: absolute;
+	width: 100%;
+	background-size: cover;*/
+}
+
+.form-control
+{
+	height: 40px;
+	box-shadow: none;
+	color: #969fa4;
+}
+
+.signup-form
+{
+	width: 400px;
+	margin: 0 auto;
+	padding: 30px 0;
+}
+.signup-form h2
+{
+	color: #636363;
+    margin: 0 0 15px;
+	position: relative;
+	text-align: center;
+}
+
+  
+.signup-form form
+{
+	color: #999;
+	border-radius: 3px;
+   	margin-bottom: 15px;
+    background: #f2f3f7;
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+    padding: 30px;
+}
+.signup-form .form-group
+{
+	margin-bottom: 20px;
+}
+.signup-form .btn
+{        
+    font-size: 16px;
+    font-weight: bold;		
+	width: 140px;
+	left: 50%;
+}
+.signup-form .row div:first-child
+{
+	padding-right: 10px;
+}
+
+.text-center
+{
+	color: white;
+}
+
+#register a
+{
+	color: yellow;
+}
+	
+
+	</style>
+</head>
+</head>
+<body>
+
+	<div class="signup-form">
+    	<form action="/register" method="post">
+			<h2>Register</h2>
+	
+	        <div class="form-group">
+	        	<input type="email" class="form-control" name="username" id="username" placeholder="Email" required="required">
+	        </div>
+			<div class="form-group">
+	            <input type="password" class="form-control" name="password" id="password" placeholder="Password" required="required">
+	        </div>     
+	     	<div class="form-group">
+	        	<input type="text" class="form-control" name="name" id="name" placeholder="Name" required="required">
+	        </div>
+			<div class="form-group">
+	        	<input type="text" class="form-control" name="phoneNumber" id="phone number" placeholder="Phone Number" required="required">
+	        </div>
+			<div style="padding-right: 25%; padding-bottom: 8%;">
+				<label>
+					<input type="radio" name="userType" value="Teacher" id="radio1" required><span>Teacher</span>
+				</label><br>
+				<label>
+					<input type="radio" name="userType" value="Student" id="radio2">Student
+				</label>
+			</div>
+			<div class="form-group">
+	            <button type="submit" class="btn btn-success btn-lg btn-block">Register</button>
+	        </div>
+    	</form>
+		<div class="text-center" id="register"> <a href="/login">Already have an account?</a></div>
+	</div>
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+	<script>
+		psw=document.getElementById('psw')
+		psw.addEventListener("keydown",(event)=>{
+			if(psw.value.length<8){
+			console.log('too short');
+			psw.style.border = "red";
+			psw.style.boxShadow="inset 0 1px 1px rgba(0, 0, 0, 0.2), 0 0 8px rgba(255, 0, 0, 0.6)";
+			}
+		})
+	</script>
+	
+
+ 
+</body>
+</html>

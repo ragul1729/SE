@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+.row{
+  display:flex;
+  justify-content:center;
+}
+
+.row>*{
+  display:flex;
+  height:200px ;
+  width:200px ;
+  justify-content:center;
+  align-items:center;
+  border: 1px solid black;
+  margin: 10px;
+}
+
+*{
+  background-color: CornSilk;
+}
+  </style>
+</head>
+
+<body>
+    <div class="container">
+      <div class="row">
+        <div class="bg-primary text-white"><a href="">.bg-primary</a></div>
+        <div class="bg-secondary text-white">.bg-secondary</div>
+        <div class="bg-success text-white">.bg-success</div>
+        <div class="bg-danger text-white">.bg-danger</div>
+        <div class="bg-warning text-dark">.bg-warning</div>
+        <!--div class="bg-info text-white">.bg-info</div>
+        <div class="bg-light text-dark">.bg-light</div>
+        <div class="bg-dark text-white">.bg-dark</div>
+        <div class="bg-white text-dark">.bg-white</div-->
+      </div>
+      <form method="POST" action="/logout">
+          <button type="submit">Log Out</button>
+      </form>
+      <div>
+        <p><%= user.username %></p>
+      </div>
+    </div>
+    
+</body>
+</html>
