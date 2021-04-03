@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Edit My Profile</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+<style>
+body {
+  background-image: url('/Courses/images/bgphoto.jpg');
+}
+</style>
+<div class="row">
+      <div class="col-sm">
+        <nav class="navbar navbar-default" style="background-color: pink;">
+          <div class="container-fluid">
+            <div class="navbar-header">
+              <a class="navbar-brand weight-300" href="/Courses/dashboard.html">
+                <img src="https://cms.cb.amrita.edu/images/amrita_wide_short_new.png" style="margin-top: -40px; margin-left: 40px;">
+            </a>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+				<li><a href="/home"><span class="glyphicon glyphicon-log-in"></span> Back to Courses</a></li>
+			</ul>
+          </div>
+        </nav>
+      </div>
+    </div>
+
+<div style="background:rgb(234,235,185) !important " class="jumbotron text-center">
+  <h1>Edit My Profile</h1>
+  <p><b>Name : </b>name <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal1">Change Name</button></p> 
+  <p><b>Password : </b> <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal2">Change Password</button></p> 
+  <p><b>Phone Number : </b>phone number <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal3">Change Phone Number</button></p> 
+</div>
+<div class="container">
+
+  <div class="modal" id="myModal1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+      
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h1 class="modal-title">Edit Name</h1>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        
+        <!-- Modal body -->
+      <div class="modal-body">
+        <form action="/update/profile/<%=userid%>" method="post">
+          <div class="form-group">
+            <label for="name">Enter new Name : </label>
+            <input type="name" class="form-control" id="name" placeholder="Enter new Name : " name="name">
+          </div>
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+      </div>
+        
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+  
+  
+  
+  
+  
+  
+  
+    <div class="modal" id="myModal2">
+    <div class="modal-dialog">
+      <div class="modal-content">
+      
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h1 class="modal-title">Edit Password</h1>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        
+        <!-- Modal body -->
+        <div class="modal-body">
+          <form action="/update/profile/<%=userid%>" method="post">
+    <div class="form-group">
+      <label for="password">Enter new Password : </label>
+      <input type="password" class="form-control" id="password" placeholder="Enter new Password : " name="password">
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+        </div>
+        
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+  
+  
+  
+  
+  
+  
+  
+  
+    <div class="modal" id="myModal3">
+    <div class="modal-dialog">
+      <div class="modal-content">
+      
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h1 class="modal-title">Edit Phone Number</h1>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        
+        <!-- Modal body -->
+        <div class="modal-body">
+          <form action="/update/profile/<%=userid%>" method="post">
+    <div class="form-group">
+      <label for="phone">Enter new Phone Number :</label>
+      <input type="phone" id="phone" name="phone" pattern="[0-9]{10}"required>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+        </div>
+        
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+  <% if(weakPassword && weakPassword.length){ %>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      <%= weakPassword %>
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+  <% } %>
+
+  <% if(passwordChangeSuccessful && passwordChangeSuccessful.length){ %>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      <%= passwordChangeSuccessful %>
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+  <% } %>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</body>
+</html>

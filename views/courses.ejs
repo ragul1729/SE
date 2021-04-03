@@ -45,7 +45,7 @@
             </a>
             </div>
             <ul class="nav navbar-nav navbar-right">
-              <li><a href="#" style="display:inline-block;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
+              <li><a href="/update/profile/<%=user._id%>" style="display:inline-block;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
                 <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
               </svg> Edit My Profile</a></li>
               <li><a href="/logout" style="display:inline-block;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
@@ -71,7 +71,7 @@
 	<div class="card mt-5" style="width: 18rem; height: 10rm;">
       <div class="card-body m-auto">
           <a class="nav-link" href="/courses/dashboard/<%=course._id%>" class="card-title" style="padding-top: 50%; padding-bottom: 50%;">
-            <span class="badge bg-secondary">5</span></h4>
+            <span class="badge bg-secondary"><%=course.fileNot+course.marksNot+course.assignmentNot%></span></h4>
             <h5 class="card-title p-auto"><%=course.code%></h5>
           </a>
       </div>

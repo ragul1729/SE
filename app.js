@@ -57,7 +57,19 @@ const CourseSchema=new mongoose.Schema({
         unique:true,
         required:true,
     },
-    code: String
+    code: String,
+    fileNot:{
+        type:Number,
+        default:2
+    },
+    marksNot:{
+        type:Number,
+        default:2
+    },
+    assignmentNot:{
+        type:Number,
+        default:2
+    }
 })
 
 ///////////////////////////////////////////////////////
@@ -84,6 +96,8 @@ app.use((req,res,next)=>{
     res.locals.loginError=req.flash('loginError');
     res.locals.registerError=req.flash('registerError');
     res.locals.weakPassword=req.flash('weakPassword');
+    res.locals.invalidPhone=req.flash('invalidPhone');
+    res.locals.passwordChangeSuccessful=req.flash('passwordChangeSuccessful');
     next();
 })
 
@@ -120,7 +134,7 @@ app.post('/register',(req,res)=>{
             req.flash('registerError','Username already exists');
         }
         else if(e.code=='auth/weak-password'){
-            req.flash('weakPassword','Your password must be more than 6 characters');
+            req.flash('weakPassword','Your password must be at least 6 characters');
         }
         res.redirect('/');
         console.log(e);
@@ -256,6 +270,51 @@ app.post('/update/faculty/:fac_id',(req,res)=>{
     })
 });
 
+app.get('/update/profile/:fac_id',(req,res)=>{
+    if(!auth.currentUser){
+        res.redirect('/login');
+        return;
+    }
+    res.render('editProfile.ejs',{userid:req.params.fac_id});
+});
+
+app.post('/update/profile/:fac_id',(req,res)=>{
+    const {name,password,phone}=req.body;
+    
+    if(name!=undefined){
+        User.findById(req.params.fac_id,(err,user)=>{
+            if(!err){
+                user.name=name;
+                user.save();
+                console.log(user);
+            }
+        });
+    }
+    if(phone!=undefined){
+        User.findById(req.params.fac_id,(err,user)=>{
+            if(!err){
+                user.phoneNumber=phone;
+                user.save();
+                console.log(user)
+            }
+        });
+    }
+    if(password!=undefined){
+        auth.currentUser.updatePassword(password)
+        .then(()=>{
+            req.flash('passwordChangeSuccessful','Password updated successfully');
+            console.log('successful');
+        })
+        .catch(e=>{
+            if(e.code=='auth/weak-password'){
+                req.flash('weakPassword','Your password must be at least 6 characters');
+                console.log(e);
+            }
+        })
+    }
+    
+    res.redirect('/update/profile/'+req.params.fac_id);
+})
 
 
 app.get('/faculty/:fac_id',(req,res)=> {
