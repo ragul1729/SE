@@ -82,6 +82,8 @@ app.use(session({
 
 app.use((req,res,next)=>{
     res.locals.loginError=req.flash('loginError');
+    res.locals.registerError=req.flash('registerError');
+    res.locals.weakPassword=req.flash('weakPassword');
     next();
 })
 
@@ -98,7 +100,6 @@ app.get('/',(req,res)=>{
 })
 
 app.post('/register',(req,res)=>{
-    console.log(req.body.userType);
     const {username,password,name,phoneNumber,userType}=req.body;
     auth.createUserWithEmailAndPassword(username,password)
     .then((user)=>{
@@ -115,7 +116,13 @@ app.post('/register',(req,res)=>{
 
     })
     .catch((e)=>{
-        res.send("Username or password already exists");
+        if(e.code=='auth/email-already-in-use'){
+            req.flash('registerError','Username already exists');
+        }
+        else if(e.code=='auth/weak-password'){
+            req.flash('weakPassword','Your password must be more than 6 characters');
+        }
+        res.redirect('/');
         console.log(e);
     })
     /*const newUser=new User({username:username,name:name});
@@ -150,6 +157,10 @@ app.post('/login',(req,res)=>{
 })
 
 app.get('/logout',(req,res)=>{
+    if(!auth.currentUser){
+        res.redirect('/login');
+        return;
+    }
     auth.signOut();
     res.redirect('/login');
 })
@@ -187,6 +198,18 @@ app.get('/home',(req,res)=>{
         }
     })
 })
+
+app.get('/courses/dashboard/:course_id',(req,res)=>{
+    if(!auth.currentUser){
+        res.redirect('/login');
+        return;
+    }
+    Course.findById(req.params.course_id,(err,course)=>{
+        if(!err){
+            res.render('dashboard.ejs',{course:course});
+        }
+    })
+});
 
 app.get('/courseRegister',(req,res)=>{
     res.render("courseRegister.ejs");
@@ -232,6 +255,8 @@ app.post('/update/faculty/:fac_id',(req,res)=>{
         }
     })
 });
+
+
 
 app.get('/faculty/:fac_id',(req,res)=> {
         var faculty;

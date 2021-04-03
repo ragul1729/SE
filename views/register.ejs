@@ -8,7 +8,7 @@
 
 body 
 {
-	padding-top: 7%;
+	
 	background: #800080;  /* fallback for old browsers */
 background: -webkit-linear-gradient(to right, #ffc0cb, #800080);  /* Chrome 10-25, Safari 5.1-6 */
 background: linear-gradient(to right, #ffc0cb, #800080); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
@@ -113,6 +113,25 @@ background: linear-gradient(to right, #ffc0cb, #800080); /* W3C, IE 10+/ Edge, F
 	        </div>
     	</form>
 		<div class="text-center" id="register"> <a href="/login">Already have an account?</a></div>
+		
+		<% if(registerError && registerError.length){ %>
+			<div class="alert alert-danger alert-dismissible fade show" role="alert">
+				<%= registerError %>
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+		<% } %>
+
+		<% if(weakPassword && weakPassword.length){ %>
+			<div class="alert alert-danger alert-dismissible fade show" role="alert">
+				<%= weakPassword %>
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+		<% } %>
+
 	</div>
 	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
