@@ -9,6 +9,17 @@ const session = require('express-session');
 const { countReset } = require('console');
 const app=express();
 const firebase=require('firebase');
+const multer=require('multer');
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, 'uploads/');
+    },
+    filename: function (req, file, cb) {
+      cb(null, file.originalname+'-'+Date.now());
+    }
+});
+const upload = multer({ storage: storage });
+//const fileUpload=require('express-fileupload');
 //const { nextTick } = require('node:process');
 var firebaseConfig = {
     apiKey: "AIzaSyCu1W_ewdzxHt9E_rcmGRDB9CFSbIdryYg",
@@ -46,10 +57,22 @@ const UserSchema=new mongoose.Schema({
 });
 
 const FileSchema=new mongoose.Schema({
-        file:{
-            type:String
-        }
-    });
+
+    courseID:{type:mongoose.Schema.Types.ObjectId,ref:'Course'},
+    fileData:{
+        fieldname: String,
+        originalname: String,
+        encoding: String,
+        mimetype: String,
+        destination: String,
+        filename: String,
+        path: String,
+        size: Number
+    },
+    UploadedDate: String,
+    UploadedBy: {type:mongoose.Schema.Types.ObjectId,ref:'User'},
+
+});
 
 const CourseSchema=new mongoose.Schema({
     courseName:{
@@ -85,6 +108,7 @@ app.use(bodyParser.json());
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
+//app.use(fileUpload());
 
 app.use(session({
     secret:'Thisisasecret',
@@ -134,20 +158,12 @@ app.post('/register',(req,res)=>{
             req.flash('registerError','Username already exists');
         }
         else if(e.code=='auth/weak-password'){
-            req.flash('weakPassword','Your password must be at least 6 characters');
+            req.flash('weakPassword','Password must be at least 6 characters');
         }
         res.redirect('/');
         console.log(e);
     })
-    /*const newUser=new User({username:username,name:name});
-    //console.log(newUser);
-    try{
-    User.register(newUser,password);
-    res.redirect('/');
-    }
-    catch(e){
-        console.log(e);
-    }*/
+
 })
 
 
@@ -160,7 +176,12 @@ app.post('/login',(req,res)=>{
     auth.signInWithEmailAndPassword(username,password)
     .then((user)=>{
         //console.log(user);
-        res.redirect('/home');
+        if(user.email=='admin@gmail.com'){
+            res.redirect('/admin');
+        }
+        else{
+            res.redirect('/home');
+        }
     })
     .catch((e)=>{
         console.log(e);
@@ -178,24 +199,25 @@ app.get('/logout',(req,res)=>{
     auth.signOut();
     res.redirect('/login');
 })
-/*app.post('/login',passport.authenticate('local'),(req,res)=>{
 
-    res.render('homepage.ejs');
+app.get('/changePassword',(req,res)=>{
+    res.render('forgotPassword.ejs')
 })
 
-app.post('/upload',(req,res)=>{
-    const file=req.body.singlefile;
-    const newFile=new File({file:file});
-    newFile.save((err,returnfile)=>{
-        if(err){
-            console.log(err);
-        }
-        else{
-            console.log(returnfile);
-        }
+app.post('/changePassword',(req,res)=>{
+    auth.sendPasswordResetEmail('ragulcdm@gmail.com').then(function() {
+        console.log('email sent successfully');
+        res.redirect('/changePassword');
+      }).catch(function(error) {
+        console.log(error);
+      });
+    console.log('hello');
+})
 
-    })
-})*/
+
+app.get('/admin',(req,res)=>{
+    res.render('admin.ejs');
+})
 
 app.get('/home',(req,res)=>{
     if(!auth.currentUser){
@@ -205,6 +227,7 @@ app.get('/home',(req,res)=>{
     User.findOne({username:auth.currentUser.email}).populate('courseList').exec((err,currentUser)=>{
         //console.log(currentUser);
         if(currentUser){
+            req.session.currentUser=currentUser;
             res.render('courses.ejs',{user:currentUser});
         }
         else{
@@ -289,6 +312,7 @@ app.post('/update/profile/:fac_id',(req,res)=>{
                 console.log(user);
             }
         });
+        res.redirect('/update/profile/'+req.params.fac_id);
     }
     if(phone!=undefined){
         User.findById(req.params.fac_id,(err,user)=>{
@@ -298,24 +322,67 @@ app.post('/update/profile/:fac_id',(req,res)=>{
                 console.log(user)
             }
         });
+        res.redirect('/update/profile/'+req.params.fac_id);
     }
     if(password!=undefined){
         auth.currentUser.updatePassword(password)
         .then(()=>{
             req.flash('passwordChangeSuccessful','Password updated successfully');
             console.log('successful');
+            res.redirect('/update/profile/'+req.params.fac_id);
         })
-        .catch(e=>{
+        .catch((e)=>{
             if(e.code=='auth/weak-password'){
                 req.flash('weakPassword','Your password must be at least 6 characters');
                 console.log(e);
+                res.redirect('/update/profile/'+req.params.fac_id);
             }
         })
     }
     
-    res.redirect('/update/profile/'+req.params.fac_id);
-})
+    
+});
 
+app.get('/:course_id/file/upload',(req,res)=>{
+    File.find({}).populate('UploadedBy').exec((err,files)=>{
+        res.render('filePage.ejs',{course_id:req.params.course_id,files:files,currentUser:req.session.currentUser});
+    });
+});
+
+app.post('/:course_id/file/upload',upload.single('newfile'),(req,res)=>{
+    const newfile=req.file;
+    const date=new Date();
+    const today=date.getDate()+'/'+(date.getMonth()+1)+'/'+date.getFullYear();
+    const newFile=new File({courseID:mongoose.Types.ObjectId(req.params.course_id),fileData:newfile,
+                            UploadedBy:mongoose.Types.ObjectId(req.session.currentUser._id),UploadedDate:today});
+    newFile.save((err1,savedFile)=>{
+        if(err1){
+            console.log(err1);
+        }
+    })
+    /*Course.findById(req.params.course_id,(err,course)=>{
+        const newFile=new File({courseID:course,fileData:newfile});
+        newFile.save((err1,savedFile)=>{
+            if(err1){
+                console.log(err1);
+            }
+        })
+    });*/
+    res.redirect('/'+req.params.course_id+'/file/upload');
+    
+});
+
+app.get('/:file_id/file/download',(req,res)=>{
+    File.findById(req.params.file_id,(err,foundFile)=>{
+        res.download('uploads/'+foundFile.fileData.filename,foundFile.fileData.filename.split("-")[0]);
+    });
+    
+});
+
+app.get('/:file_id/:course_id/file/delete',async (req,res)=>{
+    await File.findByIdAndDelete(req.params.file_id);
+    res.redirect('/'+req.params.course_id+'/file/upload');
+})
 
 app.get('/faculty/:fac_id',(req,res)=> {
         var faculty;
@@ -339,3 +406,6 @@ app.get('/courseAssign',(req,res)=>{
 app.listen(4000, () => {
     console.log('Serving on port 4000')
 })
+
+
+module.exports=app;

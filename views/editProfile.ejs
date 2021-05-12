@@ -10,11 +10,6 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 </head>
 <body>
-<style>
-body {
-  background-image: url('/Courses/images/bgphoto.jpg');
-}
-</style>
 <div class="row">
       <div class="col-sm">
         <nav class="navbar navbar-default" style="background-color: pink;">
@@ -31,13 +26,33 @@ body {
         </nav>
       </div>
     </div>
-
+   
 <div style="background:rgb(234,235,185) !important " class="jumbotron text-center">
   <h1>Edit My Profile</h1>
   <p><b>Name : </b>name <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal1">Change Name</button></p> 
   <p><b>Password : </b> <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal2">Change Password</button></p> 
   <p><b>Phone Number : </b>phone number <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal3">Change Phone Number</button></p> 
 </div>
+<div class="container">
+<% if(weakPassword && weakPassword.length){ %>
+  <div class="alert alert-danger alert-dismissible" role="alert">
+    <%= weakPassword %>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+<% } %>
+
+<% if(passwordChangeSuccessful && passwordChangeSuccessful.length){ %>
+  <div class="alert alert-danger alert-dismissible " role="alert">
+    <%= passwordChangeSuccessful %>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+<% } %>
+</div>
+
 <div class="container">
 
   <div class="modal" id="myModal1">
@@ -105,13 +120,6 @@ body {
       </div>
     </div>
   </div>
-  
-  
-  
-  
-  
-  
-  
   
     <div class="modal" id="myModal3">
     <div class="modal-dialog">
