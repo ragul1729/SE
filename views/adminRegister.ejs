@@ -64,13 +64,11 @@
 
 <body>
 
-    <div class="container-fluid">
     <div class="sidenav">
       <a href="/admin/register">Register</a>
       <a href="/admin/course">Course</a>
       <a href="/admin/user">Update User</a>
       <a href="/admin">Home</a>
-    </div>
     </div>
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -93,55 +91,33 @@
     </nav>
 
     <div class="content">
-
-        <table class="table">
-          <thead>
-            <tr>
-              <th scope="col">Course Name</th>
-              <th scope="col">Course Code</th>
-              <th scope="col"></th>
-            </tr>
-          </thead>
-          <tbody>
-              <% courses.forEach(function(course){ %>
-                  <tr>
-                      <th scope="col"><%= course.courseName %></th>
-                      <th scope="col"><%= course.courseCode %></th>
-                      <th scope="col"><a href='/admin/course/delete/<%= course._id %>' class="btn btn-danger">Delete</a></th>
-                  </tr>
-              <% }) %>
-          </tbody>
-        </table>
-
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#courseForm" data-bs-whatever="@mdo">Add a Course</button>
-        
-        <div class="modal fade" id="courseForm" tabindex="-1" aria-labelledby="courseFormLabel" aria-hidden="true">
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="courseFormLabel">New Course</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                  <form action="/admin/course" method="POST">
-                    <div class="mb-3">
-                      <label for="recipient-name" class="col-form-label">Course Code</label>
-                      <input type="text" class="form-control" id="courseCode" name="courseCode" required>
-                    </div>
-                    <div class="mb-3">
-                      <label for="message-text" class="col-form-label">Course Name</label>
-                      <input type="text" class="form-control" id="courseName" name="courseName" required>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                  <button type="submit" class="btn btn-primary">Submit</button>
-                </div>
-                  </form>
-              </div>
-            </div>
+      <form action="/admin/register" method="POST" class="validated-form">
+          <div class="mb-3">
+              <label class="form-label" for="username">Username</label>
+              <input class="form-control" type="email" id="username" name="username" style="width : 50%" required>
           </div>
-    
+          <div class="mb-3">
+              <label class="form-label" for="password">Password</label>
+              <input class="form-control" type="password" id="password" name="password" style="width : 50%" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label" for="name">Name</label>
+            <input class="form-control" type="text" id="name" name="name" style="width : 50%"  required>
+          </div>
+          <div class="mb-3">
+              <label class="form-label" for="phoneNumber">Phone Number</label>
+              <input class="form-control" type="tel" id="phoneNumber" name="phoneNumber" style="width : 50%" pattern="[0-9]{10}" required>
+          </div>
+          <div style="padding-right: 25%; padding-bottom: 8%;">
+            <label>
+              <input type="radio" name="userType" value="Teacher" id="radio1" required><span>Teacher</span>
+            </label><br>
+            <label>
+              <input type="radio" name="userType" value="Student" id="radio2">Student
+            </label>
+          </div>
+            <button class="btn btn-success" type="submit">Register</button>
+      </form>
     </div>
 
     

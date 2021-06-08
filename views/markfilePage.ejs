@@ -11,10 +11,9 @@
   <body>
     <% if(currentUser.userType=="Teacher"){ %>
     <div>
-        <form method="POST" action="/<%=course_id%>/file/upload" enctype="multipart/form-data">
+        <form method="POST" action="/<%=course_id%>/markfile/upload" enctype="multipart/form-data">
             <div class="mb-3">
               <input type="file" class="form-control" id="myfile" name='newfile'>
-              <input type="text" class="form-control" id="myfile" name='course'>
             </div>
             <input type="submit">
         </form>
@@ -28,20 +27,18 @@
           <th scope="col">Uploaded Date</th>
           <th scope="col">Delete</th>
         </tr>
-          <% if(files){ %>
-            <% files.forEach(function(file){ %>
-              <tr>
-                <td><div><a href="/<%= file._id %>/file/download"><%= file.fileData.filename.split("-")[0] %></a></div></td>
-                <td><%= file.UploadedBy.name %></td>
-                <td><%= file.UploadedDate %></td>
-                <td>
-                  <% if(file.UploadedBy._id==currentUser._id){ %>
-                      <a href='/<%= file._id %>/<%= course_id %>/file/delete' class="btn btn-danger">Delete</a>
-                  <% } %>
-                </td>
-              </tr>
-            <% }) %>
-          <% } %>
+        <% files.forEach(function(file){ %>
+          <tr>
+            <td><div><a href="/<%= file._id %>/file/download"><%= file.fileData.filename.split("-")[0] %></a></div></td>
+            <td><%= file.UploadedBy.name %></td>
+            <td><%= file.UploadedDate %></td>
+            <td>
+              <% if(file.UploadedBy.id==currentUser._id){ %>
+                  <a href='/<%= file._id %>/<%= course_id %>/markfile/delete' class="btn btn-danger">Delete</a>
+              <% } %>
+            </td>
+          </tr>
+        <% }) %>
       </table>
     </div>
 
