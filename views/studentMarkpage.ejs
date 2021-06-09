@@ -10,19 +10,23 @@
   </head>
   <body>
     <div class="container">
-      <table class="table table-striped">
-        <tr class="table-info">
-          <th scope="col">Periodical-1</th>
-          <th scope="col">Periodical-2</th>
-        </tr>
-        <% if(markobj){ %>
-          <tr class="table-warning">
-            <th scope="col"><%= markobj['Periodical-1'] %></th>
-            <th scope="col"><%= markobj['Periodical-2'] %></th>
+      <% if(markobj){ %>
+        <% var keys=Object.keys(markobj) %>
+        <table class="table table-striped">
+          <tr class="table-info">
+            <% for(var i=1;i< keys.length;i++){ %>
+                <th scope="col"><%= keys[i] %></th>
+            <% } %>
           </tr>
-        <% } %>
-        
-      </table>
+          <tr class="table-warning">
+            <% for(var i=1;i< keys.length;i++){ %>
+              <td><%= markobj[keys[i]] %></td>
+            <% } %>
+          </tr>
+        </table>
+      <% } else{ %>
+
+      <% } %>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>

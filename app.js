@@ -1,9 +1,6 @@
 const express=require('express');
 const mongoose=require('mongoose');
-const passport=require('passport');
 const bodyParser=require("body-parser");
-const passportLocalMongoose=require('passport-local-mongoose');
-const LocalStrategy = require('passport-local');
 const flash=require('connect-flash');
 const session = require('express-session');
 const { countReset } = require('console');
@@ -161,7 +158,6 @@ const StudentAssignmentSchema= new mongoose.Schema({
 
 ///////////////////////////////////////////////////////
 
-UserSchema.plugin(passportLocalMongoose);
 const User = mongoose.model('User',UserSchema);
 const File=mongoose.model('File',FileSchema);
 const Course=mongoose.model('Course',CourseSchema);
@@ -172,8 +168,6 @@ const StudentAssignment=mongoose.model('StudentAssignment',StudentAssignmentSche
 app.use(express.urlencoded({extended:true}));
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());
-app.use(passport.initialize());
-app.use(passport.session());
 app.use(flash());
 //app.use(fileUpload());
 
@@ -191,11 +185,6 @@ app.use((req,res,next)=>{
     res.locals.passwordChangeSuccessful=req.flash('passwordChangeSuccessful');
     next();
 })
-
-passport.use(new LocalStrategy(User.authenticate()));
-
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
 
 app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
@@ -552,8 +541,8 @@ app.post('/:course_id/markfile/upload',upload.single('newfile'),(req,res)=>{
                 temp.forEach((res) => {
                     data.push(res);
                 })
-                console.log(data);
-                console.log(foundcourse);
+                //console.log(data);
+                //console.log(foundcourse);
                 const newFile=new Markfile({courseCode:foundcourse.courseCode,fileData:newfile,
                     UploadedBy:{id:mongoose.Types.ObjectId(req.session.currentUser._id),name:founduser.name},UploadedDate:today,markList:data});
                 newFile.save((err2,savedFile)=>{
@@ -561,6 +550,8 @@ app.post('/:course_id/markfile/upload',upload.single('newfile'),(req,res)=>{
                         console.log(err2);
                     }
                 })
+                foundcourse.marksNot+=1;
+                foundcourse.save();
             })
         }
     })
@@ -571,6 +562,15 @@ app.post('/:course_id/markfile/upload',upload.single('newfile'),(req,res)=>{
 app.get('/:file_id/:course_id/markfile/delete',(req,res)=>{
     Markfile.findByIdAndDelete(req.params.file_id,(err,foundfile)=>{
         if(!err){
+            Course.findById(req.params.course_id,(err1,foundcourse)=>{
+                if(!err1){
+                    foundcourse.marksNot-=1;
+                    foundcourse.save();
+                }
+                else{
+                    console.log(err1);
+                }
+            })
             res.redirect('/'+req.params.course_id+'/markfile/upload');
         }
         else{
