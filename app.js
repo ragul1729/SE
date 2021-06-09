@@ -120,6 +120,45 @@ const MarkfileSchema=new mongoose.Schema({
     markList: []
 })
 
+const TeacherAssignmentSchema=new mongoose.Schema({
+    courseCode: String,
+    UploadedBy:{
+        id: {type:mongoose.Schema.Types.ObjectId,ref:'User'},
+        name: String,
+    },
+    fileData:{
+        fieldname: String,
+        originalname: String,
+        encoding: String,
+        mimetype: String,
+        destination: String,
+        filename: String,
+        path: String,
+        size: Number
+    },
+    UploadedDate: String,
+    studentList:[{type:mongoose.Schema.Types.ObjectId,ref:'StudentAssignment'}]
+})
+
+const StudentAssignmentSchema= new mongoose.Schema({
+    courseCode: String,
+    UploadedBy:{
+        id: {type:mongoose.Schema.Types.ObjectId,ref:'User'},
+        RollNumber: String
+    },
+    fileData:{
+        fieldname: String,
+        originalname: String,
+        encoding: String,
+        mimetype: String,
+        destination: String,
+        filename: String,
+        path: String,
+        size: Number
+    },
+    UploadedDate: String,
+})
+
 ///////////////////////////////////////////////////////
 
 UserSchema.plugin(passportLocalMongoose);
@@ -127,6 +166,8 @@ const User = mongoose.model('User',UserSchema);
 const File=mongoose.model('File',FileSchema);
 const Course=mongoose.model('Course',CourseSchema);
 const Markfile=mongoose.model('Markfile',MarkfileSchema);
+const TeacherAssignment=mongoose.model('TeacherAssignment',TeacherAssignmentSchema);
+const StudentAssignment=mongoose.model('StudentAssignment',StudentAssignmentSchema);
 
 app.use(express.urlencoded({extended:true}));
 app.use(bodyParser.urlencoded({extended:true}));
@@ -473,9 +514,11 @@ app.get('/:file_id/:course_id/file/delete',async (req,res)=>{
 // mark files
 app.get('/:course_id/markfile/upload',(req,res)=>{
     if(req.session.currentUser.userType=='Teacher'){
-        Markfile.find({}).exec((err,files)=>{
-            res.render('markfilePage.ejs',{course_id:req.params.course_id,files:files,currentUser:req.session.currentUser});
-        });
+        Course.findById(req.params.course_id,(err,foundcourse)=>{
+            Markfile.find({courseCode:foundcourse.courseCode}).exec((err,files)=>{
+                res.render('markfilePage.ejs',{course_id:req.params.course_id,files:files,currentUser:req.session.currentUser});
+            })
+        })
     }else{
         Course.findById(req.params.course_id,(err,foundcourse)=>{
             Markfile.findOne({courseCode:foundcourse.courseCode},(err,markfile)=>{
@@ -536,20 +579,103 @@ app.get('/:file_id/:course_id/markfile/delete',(req,res)=>{
     })
 })
 
-
-app.get('/faculty/:fac_id',(req,res)=> {
-        var faculty;
-        User.findById(req.params.fac_id,(err,fac)=>{
-            faculty=fac;
+// assignment files
+app.get('/:course_id/assignment/upload',(req,res)=>{
+    if(req.session.currentUser.userType=='Teacher'){
+        Course.findById(req.params.course_id,(err,foundcourse)=>{
+            TeacherAssignment.find({courseCode:foundcourse.courseCode}).exec((err,assignments)=>{
+                res.render('TeacherAssignment.ejs',{course_id:req.params.course_id,assignments:assignments,currentUser:req.session.currentUser});
+            });
         })
-        Course.find({}, (err, courses)=> {
-                if (err) {
-                    console.log(err);
+    }else{
+        Course.findById(req.params.course_id,(err,foundcourse)=>{
+            TeacherAssignment.find({courseCode:foundcourse.courseCode},(err,assignments)=>{
+                res.render('StudentAssignment.ejs',{course_id:req.params.course_id,assignments:assignments,currentUser:req.session.currentUser});
+            })
+        })
+    }
+})
+
+app.post('/:course_id/assignment/upload',upload.single('newfile'),(req,res)=>{
+    const newfile=req.file;
+    const date=new Date();
+    console.log(req.body);
+    const today=date.getDate()+'/'+(date.getMonth()+1)+'/'+date.getFullYear();
+    if(req.session.currentUser.userType=='Teacher'){
+        Course.findById(req.params.course_id,(err,foundcourse)=>{
+            if(!err){
+                User.findById(req.session.currentUser._id,(err1,founduser)=>{
+                    const newFile=new TeacherAssignment({courseCode:foundcourse.courseCode,fileData:newfile,
+                        UploadedBy:{id:mongoose.Types.ObjectId(req.session.currentUser._id),name:founduser.name},UploadedDate:today,studentList:[]});
+                    newFile.save((err2,savedFile)=>{
+                        if(err2){
+                            console.log(err2);
+                        }
+                    })
+                })
+            }
+        })
+    }
+  
+    res.redirect('/'+req.params.course_id+'/assignment/upload');
+})
+
+//student assignment upload
+app.post('/:course_id/:assign_id/assignment/upload',upload.single("newfile"),(req,res)=>{
+    const newfile=req.file;
+    const date=new Date();
+    console.log(req.body);
+    const today=date.getDate()+'/'+(date.getMonth()+1)+'/'+date.getFullYear();
+    Course.findById(req.params.course_id,(err,foundcourse)=>{
+        TeacherAssignment.findById(req.params.assign_id,(err1,foundassignment)=>{
+            const newFile=new StudentAssignment({courseCode:foundcourse.courseCode,fileData:newfile,
+                UploadedBy:{id:mongoose.Types.ObjectId(req.session.currentUser._id),RollNumber:req.session.currentUser.username.split("@")[0].toUpperCase()},
+                UploadedDate:today});
+            newFile.save((err2,savedFile)=>{
+                if(err2){
+                    console.log(err2);
                 }
-                else {
-                    res.render('faculty.ejs', {courses:courses,faculty:faculty});
-                }
-        });
+            })
+
+            foundassignment.studentList.push(newFile);
+            foundassignment.save();
+        })
+    })
+
+    res.redirect('/'+req.params.course_id+'/assignment/upload');
+})
+
+//student submissions
+app.get('/:assign_id/:course_id/assignment/submissions',(req,res)=>{
+    TeacherAssignment.findById(req.params.assign_id).populate('studentList').exec((err,submissions)=>{
+        if(!err){
+            res.render('studentSubmissions.ejs',{submissions:submissions});
+        }
+    })
+})
+
+//assignment file download
+app.get('/:assign_id/assignment/download',(req,res)=>{
+    TeacherAssignment.findById(req.params.assign_id,(err,foundFile)=>{
+        res.download('uploads/'+foundFile.fileData.filename,foundFile.fileData.filename.split("-")[0]);
+    });
+})
+
+app.get('/:assign_id/submission/download',(req,res)=>{
+    StudentAssignment.findById(req.params.assign_id,(err,foundFile)=>{
+        res.download('uploads/'+foundFile.fileData.filename,foundFile.fileData.filename.split("-")[0]);
+    });
+})
+
+app.get('/:assign_id/:course_id/assignment/delete',(req,res)=>{
+    TeacherAssignment.findByIdAndDelete(req.params.assign_id,(err,foundfile)=>{
+        if(!err){
+            res.redirect('/'+req.params.course_id+'/assignment/upload');
+        }
+        else{
+            console.log(err);
+        }
+    })
 })
 
 

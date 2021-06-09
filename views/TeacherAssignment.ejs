@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+
+    <title>Teacher Assignment Page</title>
+  </head>
+  <body>
+    <% if(currentUser.userType=="Teacher"){ %>
+        <div>
+            <form method="POST" action="/<%=course_id%>/assignment/upload" enctype="multipart/form-data">
+                <div class="mb-3">
+                  <input type="file" class="form-control" id="myfile" name='newfile'>
+                </div>
+                <input type="submit">
+            </form>
+        </div>
+    <% } %>
+
+    <div class="container">
+        <table class="table table-striped">
+            <tr>
+            <th scope="col">File Name</th>
+            <th scope="col">Uploaded By</th>
+            <th scope="col">Uploaded Date</th>
+            <th scope="col">Submissions</th>
+            <th scope="col">Delete</th>
+            </tr>
+                <% assignments.forEach(function(assignment){ %>
+                    <tr>
+                        <td><a href="/<%= assignment._id %>/assignment/download"><%= assignment.fileData.filename.split("-")[0] %></a></td>
+                        <td><%= assignment.UploadedBy.name %></td>
+                        <td><%= assignment.UploadedDate %></td>
+                        <td>
+                            <% if(assignment.UploadedBy.id==currentUser._id){ %>
+                                <a href='/<%= assignment._id %>/<%= course_id %>/assignment/submissions' class="btn btn-warning">Submissions</a>
+                            <% } %>
+                        </td>
+                        <td>
+                            <% if(assignment.UploadedBy.id==currentUser._id){ %>
+                                <a href='/<%= assignment._id %>/<%= course_id %>/assignment/delete' class="btn btn-danger">Delete</a>
+                            <% } %>
+                        </td>
+                    </tr>
+                <% }) %>
+        </table>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+
+  </body>
+</html>

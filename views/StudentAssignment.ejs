@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+
+    <title>Student Assignment Page</title>
+  </head>
+  <body>
+    <table class="table table-striped">
+        <tr>
+            <th scope="col">File Name</th>
+            <th scope="col">Uploaded By</th>
+            <th scope="col">Uploaded Date</th>
+            <th scope="col"></th>
+        </tr>
+        <tr>
+            <% if(assignments){ %>
+                <% assignments.forEach(function(assignment){ %>
+                    <tr>
+                        <td><a href="/<%= assignment._id %>>/assignment/download"><%= assignment.fileData.filename.split("-")[0] %></a></td>
+                        <td><%= assignment.UploadedBy.name %></td>
+                        <td><%= assignment.UploadedDate %></td>
+                        <td>
+                            <form action="/<%= course_id %>/<%= assignment._id %>/assignment/upload" method="POST" enctype="multipart/form-data">
+                                <input type="file" class="form-control" id="myfile" name='newfile'>
+                                <input type="submit" class="btn btn-primary">
+                            </form>
+                        </td>
+                    </tr>
+                <% }) %>
+            <% } %>
+        </tr>
+
+    </table>
+
+
+
+    <!--button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        Submit
+    </button-->
+    
+    <!--div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Attach your file here</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="/<%= course_id %>/" method="POST" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <input type="file" class="form-control" id="myfile" name='newfile'>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+  </body>
+</html>
