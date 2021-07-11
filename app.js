@@ -33,12 +33,19 @@ firebase.initializeApp(firebaseConfig);
 const auth=firebase.auth();
 
 
-mongoose.connect('mongodb://localhost:27017/maindb', {
-    useNewUrlParser: true,
-    useCreateIndex: true,
-    useUnifiedTopology: true,
-    useFindAndModify: false
-});
+const uri = "mongodb+srv://ragul123:ragul123@cluster0.i0p5p.mongodb.net/maindb?retryWrites=true&w=majority";
+
+try{
+    mongoose.connect(uri, {
+        useNewUrlParser: true,
+        useCreateIndex: true,
+        useUnifiedTopology: true,
+        useFindAndModify: false
+    });
+    console.log("connected");
+} catch(e){
+    console.log(e);
+}
 
 
 ////////////////////////////////////////////////////////////////////
