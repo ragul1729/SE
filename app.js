@@ -686,7 +686,7 @@ app.get('/:assign_id/:course_id/assignment/delete',(req,res)=>{
 })
 
 
-app.listen(4000, () => {
+app.listen(80, () => {
     console.log('Serving on port 4000')
 })
 
